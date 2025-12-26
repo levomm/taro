@@ -1,0 +1,140 @@
+import { useState } from 'react'
+
+export function ShuffleScreen({ question, onResult }) {
+  const [shuffling, setShuffling] = useState(false)
+  const [countdown, setCountdown] = useState(7)
+  const [error, setError] = useState(null)
+
+  const shuffle = async () => {
+    if (!question.trim()) {
+      setError('Kirjuta enne küsimus.')
+      return
+    }
+
+    setShuffling(true)
+    setCountdown(7)
+    setError(null)
+
+    const timer = setInterval(() => {
+      setCountdown(c => {
+        if (c <= 1) {
+          clearInterval(timer)
+          return 0
+        }
+        return c - 1
+      })
+    }, 1000)
+
+    try {
+      const res = await fetch('http://localhost:5174/api/tarot', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question }),
+      })
+
+      if (!res.ok) {
+        throw new Error('API viga: ' + res.status)
+      }
+
+      const data = await res.json()
+
+      onResult({
+        cards: data.cards || [],
+        text: data.text || 'AI ei andnud selget vastust.',
+      })
+    } catch (e) {
+      console.error(e)
+      setError('Midagi läks valesti AI vastusega. Proovi uuesti.')
+    } finally {
+      setShuffling(false)
+      setCountdown(0)
+    }
+  }
+
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <p style={{ marginBottom: '1rem', opacity: 0.8 }}>"{question}"</p>
+      <button
+        onClick={shuffle}
+        disabled={shuffling}
+        style={{
+          padding: '1rem 2.5rem',
+          borderRadius: '999px',
+          border: 'none',
+          cursor: 'pointer',
+          background: 'linear-gradient(90deg,#fbbf24,#f97316)',
+          color: '#111827',
+          fontWeight: 700,
+          fontSize: '1.1rem',
+        }}
+      >
+        {shuffling ? `Rituaal... ${countdown}s` : 'Sega kaardid'}
+      </button>
+      {error && (
+        <p style={{ marginTop: '1rem', color: '#fca5a5' }}>
+          {error}
+        </p>
+      )}
+    </div>
+  )
+}
+
+export function ResultScreen({ result, onNewReading }) {
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '1rem',
+          marginBottom: '1.5rem',
+          flexWrap: 'wrap',
+        }}
+      >
+        {result.cards.map((card, i) => (
+          <div
+            key={i}
+            style={{
+              width: '90px',
+              height: '140px',
+              borderRadius: '0.75rem',
+              border: '2px solid rgba(250,204,21,0.7)',
+              background: 'radial-gradient(circle at top,#4c1d95,#020617)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#e5e7eb',
+              transform: card.reversed ? 'rotate(180deg)' : 'none',
+            }}
+          >
+            {card.name}
+          </div>
+        ))}
+      </div>
+
+      <p
+        style={{
+          marginBottom: '1.5rem',
+          maxWidth: 600,
+          marginInline: 'auto',
+        }}
+      >
+        {result.text}
+      </p>
+
+      <button
+        onClick={onNewReading}
+        style={{
+          padding: '0.75rem 2rem',
+          borderRadius: '999px',
+          border: '1px solid rgba(148,163,184,0.8)',
+          background: 'transparent',
+          color: 'inherit',
+          cursor: 'pointer',
+        }}
+      >
+        Uus lugemine
+      </button>
+    </div>
+  )
+}
