@@ -1,20 +1,4 @@
 import { useState } from 'react'
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core'
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  useSortable,
-  rectSortingStrategy,
-} from '@dnd-kit/sortable'
-import { CSS } from '@dnd-kit/utilities'
 
 const TAROT_DECK = [
   { name: 'The Fool', nameShort: 'ar00' },
@@ -101,85 +85,65 @@ function getCardImageUrl(nameShort) {
   return `https://sacred-texts.com/tarot/pkt/img/${nameShort}.jpg`
 }
 
-function SortableCard({ id, card, faceDown, isSelected, onSelect }) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id })
-
+function Card({ card, isSelected, onSelect }) {
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
     width: '70px',
     height: '110px',
     borderRadius: '0.5rem',
     border: isSelected 
       ? '3px solid #fbbf24' 
       : '2px solid rgba(250,204,21,0.5)',
-    background: faceDown 
-      ? 'radial-gradient(ellipse at center, #1e3a8a 0%, #312e81 50%, #1e1b4b 100%)'
-      : '#000',
+    background: 'radial-gradient(ellipse at center, #1e3a8a 0%, #312e81 50%, #1e1b4b 100%)',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     cursor: 'pointer',
-    opacity: isDragging ? 0.5 : 1,
     overflow: 'hidden',
     userSelect: 'none',
+    WebkitTapHighlightColor: 'transparent',
     position: 'relative',
     boxShadow: isSelected ? '0 0 20px rgba(251,191,36,0.6)' : 'none',
+    transition: 'all 0.2s ease',
   }
 
   return (
     <div 
-      ref={setNodeRef} 
-      style={style} 
-      {...attributes} 
-      {...listeners}
+      style={style}
       onClick={(e) => {
+        e.preventDefault()
+        e.stopPropagation()
+        onSelect()
+      }}
+      onTouchEnd={(e) => {
+        e.preventDefault()
         e.stopPropagation()
         onSelect()
       }}
     >
-      {faceDown ? (
-        <div style={{
-          width: '100%',
-          height: '100%',
+      <div style={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '0.25rem',
+        color: '#fbbf24',
+        pointerEvents: 'none',
+      }}>
+        <div style={{ fontSize: '1.5rem' }}>✦</div>
+        <div style={{ 
+          width: '30px', 
+          height: '30px', 
+          borderRadius: '50%',
+          border: '2px solid #fbbf24',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          gap: '0.25rem',
-          color: '#fbbf24',
-        }}>
-          <div style={{ fontSize: '1.5rem' }}>✦</div>
-          <div style={{ 
-            width: '30px', 
-            height: '30px', 
-            borderRadius: '50%',
-            border: '2px solid #fbbf24',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1rem'
-          }}>☽</div>
-          <div style={{ fontSize: '0.6rem' }}>✦✦✦</div>
-        </div>
-      ) : (
-        <img
-          src={getCardImageUrl(card.nameShort)}
-          alt={card.name}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-        />
-      )}
+          fontSize: '1rem'
+        }}>☽</div>
+        <div style={{ fontSize: '0.6rem' }}>✦✦✦</div>
+      </div>
     </div>
   )
 }
@@ -192,25 +156,6 @@ export function ShuffleScreen({ question, onResult }) {
   const [shuffling, setShuffling] = useState(false)
   const [countdown, setCountdown] = useState(7)
   const [error, setError] = useState(null)
-
-  const sensors = useSensors(
-    useSensor(PointerSensor),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    })
-  )
-
-  const handleDragEnd = (event) => {
-    const { active, over } = event
-
-    if (active.id !== over.id) {
-      setCards((items) => {
-        const oldIndex = items.findIndex(c => c.id === active.id)
-        const newIndex = items.findIndex(c => c.id === over.id)
-        return arrayMove(items, oldIndex, newIndex)
-      })
-    }
-  }
 
   const handleCardSelect = (card) => {
     setSelectedCards(prev => {
@@ -406,36 +351,26 @@ export function ShuffleScreen({ question, onResult }) {
         </div>
       )}
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={cards.map(c => c.id)} strategy={rectSortingStrategy}>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))',
-            gap: '0.5rem',
-            maxHeight: '500px',
-            overflowY: 'auto',
-            padding: '1rem',
-            background: 'rgba(0,0,0,0.3)',
-            borderRadius: '1rem',
-            border: '1px solid rgba(148,163,184,0.3)',
-          }}>
-            {cards.map((card) => (
-              <SortableCard 
-                key={card.id} 
-                id={card.id} 
-                card={card} 
-                faceDown={true}
-                isSelected={selectedCards.find(c => c.id === card.id)}
-                onSelect={() => handleCardSelect(card)}
-              />
-            ))}
-          </div>
-        </SortableContext>
-      </DndContext>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(70px, 1fr))',
+        gap: '0.5rem',
+        maxHeight: '500px',
+        overflowY: 'auto',
+        padding: '1rem',
+        background: 'rgba(0,0,0,0.3)',
+        borderRadius: '1rem',
+        border: '1px solid rgba(148,163,184,0.3)',
+      }}>
+        {cards.map((card) => (
+          <Card 
+            key={card.id}
+            card={card}
+            isSelected={selectedCards.find(c => c.id === card.id)}
+            onSelect={() => handleCardSelect(card)}
+          />
+        ))}
+      </div>
 
       {error && (
         <p style={{ marginTop: '1rem', color: '#fca5a5' }}>
