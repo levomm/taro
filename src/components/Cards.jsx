@@ -101,7 +101,7 @@ function getCardImageUrl(nameShort) {
   return `https://sacred-texts.com/tarot/pkt/img/${nameShort}.jpg`
 }
 
-function SortableCard({ id, card, faceDown }) {
+function SortableCard({ id, card, faceDown, isSelected, onSelect }) {
   const {
     attributes,
     listeners,
@@ -117,22 +117,34 @@ function SortableCard({ id, card, faceDown }) {
     width: '70px',
     height: '110px',
     borderRadius: '0.5rem',
-    border: '2px solid rgba(250,204,21,0.5)',
+    border: isSelected 
+      ? '3px solid #fbbf24' 
+      : '2px solid rgba(250,204,21,0.5)',
     background: faceDown 
       ? 'radial-gradient(ellipse at center, #1e3a8a 0%, #312e81 50%, #1e1b4b 100%)'
       : '#000',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    cursor: 'grab',
+    cursor: 'pointer',
     opacity: isDragging ? 0.5 : 1,
     overflow: 'hidden',
     userSelect: 'none',
     position: 'relative',
+    boxShadow: isSelected ? '0 0 20px rgba(251,191,36,0.6)' : 'none',
   }
 
   return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <div 
+      ref={setNodeRef} 
+      style={style} 
+      {...attributes} 
+      {...listeners}
+      onClick={(e) => {
+        e.stopPropagation()
+        onSelect()
+      }}
+    >
       {faceDown ? (
         <div style={{
           width: '100%',
@@ -176,6 +188,7 @@ export function ShuffleScreen({ question, onResult }) {
   const [cards, setCards] = useState(() => 
     TAROT_DECK.map((card, i) => ({ id: `card-${i}`, ...card }))
   )
+  const [selectedCards, setSelectedCards] = useState([])
   const [shuffling, setShuffling] = useState(false)
   const [countdown, setCountdown] = useState(7)
   const [error, setError] = useState(null)
@@ -199,14 +212,33 @@ export function ShuffleScreen({ question, onResult }) {
     }
   }
 
+  const handleCardSelect = (card) => {
+    setSelectedCards(prev => {
+      const isAlreadySelected = prev.find(c => c.id === card.id)
+      if (isAlreadySelected) {
+        return prev.filter(c => c.id !== card.id)
+      }
+      if (prev.length >= 3) {
+        return prev
+      }
+      return [...prev, card]
+    })
+  }
+
   const shuffleCards = () => {
     const shuffled = [...cards].sort(() => Math.random() - 0.5)
     setCards(shuffled)
+    setSelectedCards([])
   }
 
   const drawCards = async () => {
     if (!question.trim()) {
       setError('Kirjuta enne küsimus.')
+      return
+    }
+
+    if (selectedCards.length !== 3) {
+      setError('Vali täpselt 3 kaarti!')
       return
     }
 
@@ -225,7 +257,7 @@ export function ShuffleScreen({ question, onResult }) {
     }, 1000)
 
     try {
-      const drawnCards = cards.slice(0, 3).map(c => ({
+      const drawnCards = selectedCards.map(c => ({
         name: c.name,
         nameShort: c.nameShort,
         reversed: Math.random() > 0.5
@@ -268,7 +300,8 @@ export function ShuffleScreen({ question, onResult }) {
         display: 'flex',
         gap: '0.75rem',
         justifyContent: 'center',
-        flexWrap: 'wrap'
+        flexWrap: 'wrap',
+        alignItems: 'center'
       }}>
         <button
           onClick={shuffleCards}
@@ -286,22 +319,92 @@ export function ShuffleScreen({ question, onResult }) {
           🔀 Sega laud
         </button>
 
+        <div style={{
+          color: selectedCards.length === 3 ? '#10b981' : '#94a3b8',
+          fontWeight: 600,
+          fontSize: '0.9rem'
+        }}>
+          {selectedCards.length}/3 valitud
+        </div>
+
         <button
           onClick={drawCards}
-          disabled={shuffling}
+          disabled={shuffling || selectedCards.length !== 3}
           style={{
             padding: '0.75rem 2rem',
             borderRadius: '999px',
             border: 'none',
-            cursor: 'pointer',
-            background: 'linear-gradient(90deg,#fbbf24,#f97316)',
-            color: '#111827',
+            cursor: selectedCards.length === 3 ? 'pointer' : 'not-allowed',
+            background: selectedCards.length === 3 
+              ? 'linear-gradient(90deg,#fbbf24,#f97316)' 
+              : 'rgba(148,163,184,0.3)',
+            color: selectedCards.length === 3 ? '#111827' : '#64748b',
             fontWeight: 700,
           }}
         >
           {shuffling ? `Rituaal... ${countdown}s` : '✨ Tõmba kaardid'}
         </button>
       </div>
+
+      {selectedCards.length > 0 && (
+        <div style={{
+          marginBottom: '1rem',
+          padding: '0.75rem',
+          background: 'rgba(251,191,36,0.1)',
+          borderRadius: '0.75rem',
+          border: '1px solid rgba(251,191,36,0.3)'
+        }}>
+          <div style={{ fontSize: '0.85rem', marginBottom: '0.5rem', opacity: 0.8 }}>Valitud kaardid:</div>
+          <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+            {selectedCards.map((card, i) => (
+              <div key={card.id} style={{
+                width: '60px',
+                height: '95px',
+                borderRadius: '0.5rem',
+                border: '2px solid #fbbf24',
+                background: 'radial-gradient(ellipse at center, #1e3a8a 0%, #312e81 50%, #1e1b4b 100%)',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.25rem',
+                color: '#fbbf24',
+                position: 'relative'
+              }}>
+                <div style={{ fontSize: '1.2rem' }}>✦</div>
+                <div style={{ 
+                  width: '25px', 
+                  height: '25px', 
+                  borderRadius: '50%',
+                  border: '2px solid #fbbf24',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.85rem'
+                }}>☽</div>
+                <div style={{ fontSize: '0.5rem' }}>✦✦✦</div>
+                <div style={{
+                  position: 'absolute',
+                  top: '2px',
+                  right: '2px',
+                  background: '#fbbf24',
+                  color: '#111827',
+                  borderRadius: '50%',
+                  width: '16px',
+                  height: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.7rem',
+                  fontWeight: 700
+                }}>
+                  {i + 1}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <DndContext
         sensors={sensors}
@@ -321,7 +424,14 @@ export function ShuffleScreen({ question, onResult }) {
             border: '1px solid rgba(148,163,184,0.3)',
           }}>
             {cards.map((card) => (
-              <SortableCard key={card.id} id={card.id} card={card} faceDown={true} />
+              <SortableCard 
+                key={card.id} 
+                id={card.id} 
+                card={card} 
+                faceDown={true}
+                isSelected={selectedCards.find(c => c.id === card.id)}
+                onSelect={() => handleCardSelect(card)}
+              />
             ))}
           </div>
         </SortableContext>
