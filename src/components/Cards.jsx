@@ -97,8 +97,8 @@ const TAROT_DECK = [
   { name: 'King of Pentacles', nameShort: 'peki' },
 ]
 
-// Using rawpixel public domain images
-const CARD_BACK_URL = 'https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3B4NTUyMzE3LWltYWdlLWt3eXJzdm1pLmpwZw.jpg'
+// Beautiful mystical card back design
+const CARD_BACK_URL = 'https://static.vecteezy.com/system/resources/previews/022/841/114/original/tarot-card-back-side-sixty-five-free-png.png'
 
 function getCardImageUrl(nameShort) {
   return `https://sacred-texts.com/tarot/pkt/img/${nameShort}.jpg`
