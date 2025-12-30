@@ -97,7 +97,8 @@ const TAROT_DECK = [
   { name: 'King of Pentacles', nameShort: 'peki' },
 ]
 
-const CARD_BACK_URL = 'https://sacred-texts.com/tarot/pkt/img/back.jpg'
+// Using rawpixel public domain images
+const CARD_BACK_URL = 'https://images.rawpixel.com/image_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIyLTA1L3B4NTUyMzE3LWltYWdlLWt3eXJzdm1pLmpwZw.jpg'
 
 function getCardImageUrl(nameShort) {
   return `https://sacred-texts.com/tarot/pkt/img/${nameShort}.jpg`
@@ -113,6 +114,8 @@ function SortableCard({ id, card, faceDown }) {
     isDragging,
   } = useSortable({ id })
 
+  const [imageError, setImageError] = useState(false)
+
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -120,7 +123,7 @@ function SortableCard({ id, card, faceDown }) {
     height: '110px',
     borderRadius: '0.5rem',
     border: '2px solid rgba(250,204,21,0.5)',
-    background: '#000',
+    background: '#1a1a2e',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -132,15 +135,30 @@ function SortableCard({ id, card, faceDown }) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <img
-        src={faceDown ? CARD_BACK_URL : getCardImageUrl(card.nameShort)}
-        alt={faceDown ? 'Card back' : card.name}
-        style={{
+      {imageError && faceDown ? (
+        <div style={{
           width: '100%',
           height: '100%',
-          objectFit: 'cover',
-        }}
-      />
+          background: 'radial-gradient(circle, #4c1d95, #020617)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '2rem'
+        }}>
+          🎴
+        </div>
+      ) : (
+        <img
+          src={faceDown ? CARD_BACK_URL : getCardImageUrl(card.nameShort)}
+          alt=""
+          onError={() => setImageError(true)}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
+        />
+      )}
     </div>
   )
 }
