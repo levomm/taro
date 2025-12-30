@@ -148,7 +148,7 @@ function Card({ card, isSelected, onSelect }) {
   )
 }
 
-export function ShuffleScreen({ question, onResult }) {
+export function ShuffleScreen({ question, cardCount = 3, onResult }) {
   const [cards, setCards] = useState(() => 
     TAROT_DECK.map((card, i) => ({ id: `card-${i}`, ...card }))
   )
@@ -163,7 +163,7 @@ export function ShuffleScreen({ question, onResult }) {
       if (isAlreadySelected) {
         return prev.filter(c => c.id !== card.id)
       }
-      if (prev.length >= 3) {
+      if (prev.length >= cardCount) {
         return prev
       }
       return [...prev, card]
@@ -182,8 +182,8 @@ export function ShuffleScreen({ question, onResult }) {
       return
     }
 
-    if (selectedCards.length !== 3) {
-      setError('Vali täpselt 3 kaarti!')
+    if (selectedCards.length !== cardCount) {
+      setError(`Vali täpselt ${cardCount} kaarti!`)
       return
     }
 
@@ -265,25 +265,25 @@ export function ShuffleScreen({ question, onResult }) {
         </button>
 
         <div style={{
-          color: selectedCards.length === 3 ? '#10b981' : '#94a3b8',
+          color: selectedCards.length === cardCount ? '#10b981' : '#94a3b8',
           fontWeight: 600,
           fontSize: '0.9rem'
         }}>
-          {selectedCards.length}/3 valitud
+          {selectedCards.length}/{cardCount} valitud
         </div>
 
         <button
           onClick={drawCards}
-          disabled={shuffling || selectedCards.length !== 3}
+          disabled={shuffling || selectedCards.length !== cardCount}
           style={{
             padding: '0.75rem 2rem',
             borderRadius: '999px',
             border: 'none',
-            cursor: selectedCards.length === 3 ? 'pointer' : 'not-allowed',
-            background: selectedCards.length === 3 
+            cursor: selectedCards.length === cardCount ? 'pointer' : 'not-allowed',
+            background: selectedCards.length === cardCount 
               ? 'linear-gradient(90deg,#fbbf24,#f97316)' 
               : 'rgba(148,163,184,0.3)',
-            color: selectedCards.length === 3 ? '#111827' : '#64748b',
+            color: selectedCards.length === cardCount ? '#111827' : '#64748b',
             fontWeight: 700,
           }}
         >
