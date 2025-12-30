@@ -378,7 +378,3 @@ export function ResultScreen({ result, onNewReading }) {
     </div>
   )
 }
-
-function getCardImageUrl(nameShort) {
-  return `https://sacred-texts.com/tarot/pkt/img/${nameShort}.jpg`
-}
