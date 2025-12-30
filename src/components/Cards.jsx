@@ -17,25 +17,93 @@ import {
 import { CSS } from '@dnd-kit/utilities'
 
 const TAROT_DECK = [
-  'The Fool', 'The Magician', 'The High Priestess', 'The Empress', 'The Emperor',
-  'The Hierophant', 'The Lovers', 'The Chariot', 'Strength', 'The Hermit',
-  'Wheel of Fortune', 'Justice', 'The Hanged Man', 'Death', 'Temperance',
-  'The Devil', 'The Tower', 'The Star', 'The Moon', 'The Sun', 'Judgement', 'The World',
-  'Ace of Wands', 'Two of Wands', 'Three of Wands', 'Four of Wands', 'Five of Wands',
-  'Six of Wands', 'Seven of Wands', 'Eight of Wands', 'Nine of Wands', 'Ten of Wands',
-  'Page of Wands', 'Knight of Wands', 'Queen of Wands', 'King of Wands',
-  'Ace of Cups', 'Two of Cups', 'Three of Cups', 'Four of Cups', 'Five of Cups',
-  'Six of Cups', 'Seven of Cups', 'Eight of Cups', 'Nine of Cups', 'Ten of Cups',
-  'Page of Cups', 'Knight of Cups', 'Queen of Cups', 'King of Cups',
-  'Ace of Swords', 'Two of Swords', 'Three of Swords', 'Four of Swords', 'Five of Swords',
-  'Six of Swords', 'Seven of Swords', 'Eight of Swords', 'Nine of Swords', 'Ten of Swords',
-  'Page of Swords', 'Knight of Swords', 'Queen of Swords', 'King of Swords',
-  'Ace of Pentacles', 'Two of Pentacles', 'Three of Pentacles', 'Four of Pentacles', 'Five of Pentacles',
-  'Six of Pentacles', 'Seven of Pentacles', 'Eight of Pentacles', 'Nine of Pentacles', 'Ten of Pentacles',
-  'Page of Pentacles', 'Knight of Pentacles', 'Queen of Pentacles', 'King of Pentacles',
+  { name: 'The Fool', nameShort: 'ar00' },
+  { name: 'The Magician', nameShort: 'ar01' },
+  { name: 'The High Priestess', nameShort: 'ar02' },
+  { name: 'The Empress', nameShort: 'ar03' },
+  { name: 'The Emperor', nameShort: 'ar04' },
+  { name: 'The Hierophant', nameShort: 'ar05' },
+  { name: 'The Lovers', nameShort: 'ar06' },
+  { name: 'The Chariot', nameShort: 'ar07' },
+  { name: 'Strength', nameShort: 'ar08' },
+  { name: 'The Hermit', nameShort: 'ar09' },
+  { name: 'Wheel of Fortune', nameShort: 'ar10' },
+  { name: 'Justice', nameShort: 'ar11' },
+  { name: 'The Hanged Man', nameShort: 'ar12' },
+  { name: 'Death', nameShort: 'ar13' },
+  { name: 'Temperance', nameShort: 'ar14' },
+  { name: 'The Devil', nameShort: 'ar15' },
+  { name: 'The Tower', nameShort: 'ar16' },
+  { name: 'The Star', nameShort: 'ar17' },
+  { name: 'The Moon', nameShort: 'ar18' },
+  { name: 'The Sun', nameShort: 'ar19' },
+  { name: 'Judgement', nameShort: 'ar20' },
+  { name: 'The World', nameShort: 'ar21' },
+  { name: 'Ace of Wands', nameShort: 'waac' },
+  { name: 'Two of Wands', nameShort: 'wa02' },
+  { name: 'Three of Wands', nameShort: 'wa03' },
+  { name: 'Four of Wands', nameShort: 'wa04' },
+  { name: 'Five of Wands', nameShort: 'wa05' },
+  { name: 'Six of Wands', nameShort: 'wa06' },
+  { name: 'Seven of Wands', nameShort: 'wa07' },
+  { name: 'Eight of Wands', nameShort: 'wa08' },
+  { name: 'Nine of Wands', nameShort: 'wa09' },
+  { name: 'Ten of Wands', nameShort: 'wa10' },
+  { name: 'Page of Wands', nameShort: 'wapa' },
+  { name: 'Knight of Wands', nameShort: 'wakn' },
+  { name: 'Queen of Wands', nameShort: 'waqu' },
+  { name: 'King of Wands', nameShort: 'waki' },
+  { name: 'Ace of Cups', nameShort: 'cuac' },
+  { name: 'Two of Cups', nameShort: 'cu02' },
+  { name: 'Three of Cups', nameShort: 'cu03' },
+  { name: 'Four of Cups', nameShort: 'cu04' },
+  { name: 'Five of Cups', nameShort: 'cu05' },
+  { name: 'Six of Cups', nameShort: 'cu06' },
+  { name: 'Seven of Cups', nameShort: 'cu07' },
+  { name: 'Eight of Cups', nameShort: 'cu08' },
+  { name: 'Nine of Cups', nameShort: 'cu09' },
+  { name: 'Ten of Cups', nameShort: 'cu10' },
+  { name: 'Page of Cups', nameShort: 'cupa' },
+  { name: 'Knight of Cups', nameShort: 'cukn' },
+  { name: 'Queen of Cups', nameShort: 'cuqu' },
+  { name: 'King of Cups', nameShort: 'cuki' },
+  { name: 'Ace of Swords', nameShort: 'swac' },
+  { name: 'Two of Swords', nameShort: 'sw02' },
+  { name: 'Three of Swords', nameShort: 'sw03' },
+  { name: 'Four of Swords', nameShort: 'sw04' },
+  { name: 'Five of Swords', nameShort: 'sw05' },
+  { name: 'Six of Swords', nameShort: 'sw06' },
+  { name: 'Seven of Swords', nameShort: 'sw07' },
+  { name: 'Eight of Swords', nameShort: 'sw08' },
+  { name: 'Nine of Swords', nameShort: 'sw09' },
+  { name: 'Ten of Swords', nameShort: 'sw10' },
+  { name: 'Page of Swords', nameShort: 'swpa' },
+  { name: 'Knight of Swords', nameShort: 'swkn' },
+  { name: 'Queen of Swords', nameShort: 'swqu' },
+  { name: 'King of Swords', nameShort: 'swki' },
+  { name: 'Ace of Pentacles', nameShort: 'peac' },
+  { name: 'Two of Pentacles', nameShort: 'pe02' },
+  { name: 'Three of Pentacles', nameShort: 'pe03' },
+  { name: 'Four of Pentacles', nameShort: 'pe04' },
+  { name: 'Five of Pentacles', nameShort: 'pe05' },
+  { name: 'Six of Pentacles', nameShort: 'pe06' },
+  { name: 'Seven of Pentacles', nameShort: 'pe07' },
+  { name: 'Eight of Pentacles', nameShort: 'pe08' },
+  { name: 'Nine of Pentacles', nameShort: 'pe09' },
+  { name: 'Ten of Pentacles', nameShort: 'pe10' },
+  { name: 'Page of Pentacles', nameShort: 'pepa' },
+  { name: 'Knight of Pentacles', nameShort: 'pekn' },
+  { name: 'Queen of Pentacles', nameShort: 'pequ' },
+  { name: 'King of Pentacles', nameShort: 'peki' },
 ]
 
-function SortableCard({ id, name }) {
+const CARD_BACK_URL = 'https://sacred-texts.com/tarot/pkt/img/back.jpg'
+
+function getCardImageUrl(nameShort) {
+  return `https://sacred-texts.com/tarot/pkt/img/${nameShort}.jpg`
+}
+
+function SortableCard({ id, card, faceDown }) {
   const {
     attributes,
     listeners,
@@ -52,31 +120,34 @@ function SortableCard({ id, name }) {
     height: '110px',
     borderRadius: '0.5rem',
     border: '2px solid rgba(250,204,21,0.5)',
-    background: isDragging 
-      ? 'rgba(251,191,36,0.2)' 
-      : 'radial-gradient(circle at top, #4c1d95, #020617)',
+    background: '#000',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '0.65rem',
-    color: '#e5e7eb',
     cursor: 'grab',
     opacity: isDragging ? 0.5 : 1,
-    padding: '0.25rem',
-    textAlign: 'center',
+    overflow: 'hidden',
     userSelect: 'none',
   }
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <span>{name}</span>
+      <img
+        src={faceDown ? CARD_BACK_URL : getCardImageUrl(card.nameShort)}
+        alt={faceDown ? 'Card back' : card.name}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+        }}
+      />
     </div>
   )
 }
 
 export function ShuffleScreen({ question, onResult }) {
   const [cards, setCards] = useState(() => 
-    TAROT_DECK.map((name, i) => ({ id: `card-${i}`, name }))
+    TAROT_DECK.map((card, i) => ({ id: `card-${i}`, ...card }))
   )
   const [shuffling, setShuffling] = useState(false)
   const [countdown, setCountdown] = useState(7)
@@ -129,6 +200,7 @@ export function ShuffleScreen({ question, onResult }) {
     try {
       const drawnCards = cards.slice(0, 3).map(c => ({
         name: c.name,
+        nameShort: c.nameShort,
         reversed: Math.random() > 0.5
       }))
 
@@ -222,7 +294,7 @@ export function ShuffleScreen({ question, onResult }) {
             border: '1px solid rgba(148,163,184,0.3)',
           }}>
             {cards.map((card) => (
-              <SortableCard key={card.id} id={card.id} name={card.name} />
+              <SortableCard key={card.id} id={card.id} card={card} faceDown={true} />
             ))}
           </div>
         </SortableContext>
@@ -253,22 +325,28 @@ export function ResultScreen({ result, onNewReading }) {
           <div
             key={i}
             style={{
-              width: '90px',
-              height: '140px',
+              width: '120px',
+              height: '200px',
               borderRadius: '0.75rem',
               border: '2px solid rgba(250,204,21,0.7)',
-              background: 'radial-gradient(circle at top,#4c1d95,#020617)',
+              background: '#000',
               display: 'flex',
+              flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              color: '#e5e7eb',
+              overflow: 'hidden',
               transform: card.reversed ? 'rotate(180deg)' : 'none',
-              padding: '0.5rem',
-              textAlign: 'center',
-              fontSize: '0.75rem',
             }}
           >
-            {card.name}
+            <img
+              src={getCardImageUrl(card.nameShort)}
+              alt={card.name}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+              }}
+            />
           </div>
         ))}
       </div>
@@ -278,6 +356,7 @@ export function ResultScreen({ result, onNewReading }) {
           marginBottom: '1.5rem',
           maxWidth: 600,
           marginInline: 'auto',
+          lineHeight: '1.6',
         }}
       >
         {result.text}
@@ -298,4 +377,8 @@ export function ResultScreen({ result, onNewReading }) {
       </button>
     </div>
   )
+}
+
+function getCardImageUrl(nameShort) {
+  return `https://sacred-texts.com/tarot/pkt/img/${nameShort}.jpg`
 }
