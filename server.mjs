@@ -11,6 +11,24 @@ app.use(express.json())
 
 const PPLX_API_KEY = process.env.PPLX_API_KEY
 
+// Clean markdown and formatting artifacts from text
+function cleanText(text) {
+  return text
+    // Remove citation brackets like [1], [2], [web:1], etc.
+    .replace(/\[[^\]]*\]/g, '')
+    // Remove markdown bold/italic
+    .replace(/\*\*\*/g, '')
+    .replace(/\*\*/g, '')
+    .replace(/\*/g, '')
+    // Remove markdown headers
+    .replace(/^#{1,6}\s+/gm, '')
+    // Clean up multiple spaces
+    .replace(/  +/g, ' ')
+    // Clean up multiple line breaks
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
+}
+
 app.post('/api/tarot', async (req, res) => {
   try {
     console.log('Tarot request body:', req.body)
@@ -65,7 +83,8 @@ Ole konkreetne ja inimlik, mitte liiga uduse spiritual bullshitiga.
     }
 
     const data = await pplxRes.json()
-    const text = data.choices?.[0]?.message?.content || 'AI ei vastanud.'
+    const rawText = data.choices?.[0]?.message?.content || 'AI ei vastanud.'
+    const text = cleanText(rawText)
 
     res.json({
       cards: [],
