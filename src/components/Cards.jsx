@@ -97,9 +97,6 @@ const TAROT_DECK = [
   { name: 'King of Pentacles', nameShort: 'peki' },
 ]
 
-// Beautiful mystical card back design
-const CARD_BACK_URL = 'https://static.vecteezy.com/system/resources/previews/022/841/114/original/tarot-card-back-side-sixty-five-free-png.png'
-
 function getCardImageUrl(nameShort) {
   return `https://sacred-texts.com/tarot/pkt/img/${nameShort}.jpg`
 }
@@ -114,8 +111,6 @@ function SortableCard({ id, card, faceDown }) {
     isDragging,
   } = useSortable({ id })
 
-  const [imageError, setImageError] = useState(false)
-
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
@@ -123,7 +118,9 @@ function SortableCard({ id, card, faceDown }) {
     height: '110px',
     borderRadius: '0.5rem',
     border: '2px solid rgba(250,204,21,0.5)',
-    background: '#1a1a2e',
+    background: faceDown 
+      ? 'radial-gradient(ellipse at center, #1e3a8a 0%, #312e81 50%, #1e1b4b 100%)'
+      : '#000',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -131,27 +128,39 @@ function SortableCard({ id, card, faceDown }) {
     opacity: isDragging ? 0.5 : 1,
     overflow: 'hidden',
     userSelect: 'none',
+    position: 'relative',
   }
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      {imageError && faceDown ? (
+      {faceDown ? (
         <div style={{
           width: '100%',
           height: '100%',
-          background: 'radial-gradient(circle, #4c1d95, #020617)',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          fontSize: '2rem'
+          gap: '0.25rem',
+          color: '#fbbf24',
         }}>
-          🎴
+          <div style={{ fontSize: '1.5rem' }}>✦</div>
+          <div style={{ 
+            width: '30px', 
+            height: '30px', 
+            borderRadius: '50%',
+            border: '2px solid #fbbf24',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontSize: '1rem'
+          }}>☽</div>
+          <div style={{ fontSize: '0.6rem' }}>✦✦✦</div>
         </div>
       ) : (
         <img
-          src={faceDown ? CARD_BACK_URL : getCardImageUrl(card.nameShort)}
-          alt=""
-          onError={() => setImageError(true)}
+          src={getCardImageUrl(card.nameShort)}
+          alt={card.name}
           style={{
             width: '100%',
             height: '100%',
