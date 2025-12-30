@@ -4,10 +4,12 @@ import { ShuffleScreen, ResultScreen } from './components/Cards.jsx'
 function App() {
   const [step, setStep] = useState('spread')
   const [question, setQuestion] = useState('Mis ootab mind täna?')
+  const [cardCount, setCardCount] = useState(3)
   const [result, setResult] = useState(null)
 
-  const handleSpreadSelect = (q) => {
-    setQuestion(q)
+  const handleSpreadSelect = (spread) => {
+    setQuestion(spread.question || 'Mis ootab mind täna?')
+    setCardCount(spread.cards)
     setStep('shuffle')
   }
 
@@ -36,6 +38,7 @@ function App() {
         {step === 'shuffle' && (
           <ShuffleScreen
             question={question}
+            cardCount={cardCount}
             onResult={(r) => { setResult(r); setStep('result') }}
           />
         )}
@@ -53,9 +56,9 @@ function App() {
 
 function SpreadSelector({ onSelect }) {
   const spreads = [
-    { id: 'today', name: 'Täna', cards: 1 },
-    { id: 'three', name: '3 kaarti', cards: 3 },
-    { id: 'celtic', name: 'Celtic Cross', cards: 10, premium: true },
+    { id: 'today', name: 'Täna', cards: 1, question: 'Mis ootab mind täna?' },
+    { id: 'three', name: '3 kaarti', cards: 3, question: 'Mis ootab mind täna?' },
+    { id: 'celtic', name: 'Celtic Cross', cards: 10, premium: true, question: 'Mis on minu hetkeolukorra sügavam tähendus?' },
   ]
 
   return (
@@ -64,7 +67,7 @@ function SpreadSelector({ onSelect }) {
       {spreads.map(spread => (
         <button
           key={spread.id}
-          onClick={() => onSelect('Mis ootab mind täna?')}
+          onClick={() => onSelect(spread)}
           style={{
             width: '100%',
             marginBottom: '0.75rem',
