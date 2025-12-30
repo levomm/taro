@@ -76,10 +76,10 @@ function SpreadSelector({ question, setQuestion, onSelect }) {
         lineHeight: '1.6'
       }}>
         <p style={{ marginBottom: '0.75rem', fontSize: '0.95rem' }}>
-          <strong style={{ color: '#fbbf24' }}>Esimene AI-põhine tarot Eestis.</strong> Kasutame päris Rider-Waite kaarti ja täiustatud tehisaru, et pakkuda sulle isiklikke ja sügavaid vastuseid.
+          <strong style={{ color: '#fbbf24' }}>Esimene AI-põhine Taro Eestis.</strong> Kasutame päris Rider-Waite kaarte ja täiustatud tehisaru, et pakkuda sulle isiklikke ja sügavaid vastuseid.
         </p>
         <p style={{ fontSize: '0.9rem', opacity: 0.9 }}>
-          Iga lugemine on unikaalne – valid ise kaardid, AI tõlgendab nende sümboolikat ja annab konkreetse nõu.
+          Iga lugemine on unikaalne – valid ise kaardid, AI tõlgendab nende sümboolikat ja annab isikupärastatud nõu.
         </p>
       </div>
 
@@ -100,7 +100,7 @@ function SpreadSelector({ question, setQuestion, onSelect }) {
           lineHeight: '1.5'
         }}>
           <li>Küsi avatud küsimusi ("Kuidas...?", "Mis mind aitab...?", "Mida peaksin teadma...?")</li>
-          <li>Väldi jah/ei küsimusi – tarot näitab nuanäänse pilti</li>
+          <li>Väldi jah/ei küsimusi </li>
           <li>Ole konkreetne, aga mitte liiga kitsas</li>
         </ul>
       </div>
